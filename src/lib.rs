@@ -1,8 +1,17 @@
+#[allow(unused)]
 use std::os::raw::c_void;
 
 type CFTypeRef = *const c_void;
 type CGEventRef = *const c_void;
 type CGEventSourceRef = *const c_void;
+type CGMouseButton = Mouse;
+
+#[repr(i16)]
+enum CGEventSourceStateID {
+    Private = -1,
+    Combined = 0,
+    System = 1,
+}
 
 #[derive(Clone, Copy)]
 #[repr(C)]
@@ -15,17 +24,24 @@ struct CGPoint {
 extern "C" {
     fn CGEventCreate(source: CGEventSourceRef) -> CGEventRef;
     fn CGEventGetLocation(event: CGEventRef) -> CGPoint;
+    fn CGEventSourceButtonState(stateID: CGEventSourceStateID, button: CGMouseButton) -> bool;
     fn CFRelease(cf: CFTypeRef);
 }
 
-pub struct Mouse;
+#[derive(Clone, Copy)]
+#[repr(u16)]
+pub enum Mouse {
+    Left,
+    Right,
+    Center,
+}
 
 impl Mouse {
     /// Returns the current mouse location.
     /// ```
     /// use readmouse::Mouse;
     /// loop {
-    ///   println!("State of Up key: {}, ", Mouse::location();
+    ///   println!("(x,y) = {:?}", Mouse::location());
     /// }
     /// ```
     #[inline(always)]
@@ -36,5 +52,17 @@ impl Mouse {
             CFRelease(event);
             (x, y)
         }
+    }
+
+    /// Checks if mouse button is pressed.
+    /// ```
+    /// use readmouse::Mouse;
+    /// loop {
+    ///   println!("Left button pressed? {:?}", Mouse::Left.is_pressed());
+    /// }
+    /// ```
+    #[inline(always)]
+    pub fn is_pressed(self) -> bool {
+        unsafe { CGEventSourceButtonState(CGEventSourceStateID::Combined, self) }
     }
 }
