@@ -1,0 +1,11 @@
+[package]
+name = "readmouse"
+version = "0.1.6"
+authors = ["Klas Segeljakt <klasseg@kth.se>"]
+readme = "README.md"
+repository = "https://github.com/segeljakt/readmouse"
+homepage = "https://github.com/segeljakt/readmouse"
+description = """
+A very small library for reading the mouse location macOS.
+"""
+license = "MIT"
