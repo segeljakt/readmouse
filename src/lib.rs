@@ -1,4 +1,5 @@
-#[allow(unused)]
+#![allow(unused)]
+#![allow(dead_code)]
 use std::os::raw::c_void;
 
 type CFTypeRef = *const c_void;
@@ -6,7 +7,7 @@ type CGEventRef = *const c_void;
 type CGEventSourceRef = *const c_void;
 type CGMouseButton = Mouse;
 
-#[repr(i16)]
+#[repr(i32)]
 enum CGEventSourceStateID {
     Private = -1,
     Combined = 0,
